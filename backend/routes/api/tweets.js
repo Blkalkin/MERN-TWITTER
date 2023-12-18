@@ -53,6 +53,35 @@ router.get('/:id', async (req, res, next) => {
   }
 })
 
+
+router.put('/like/:id', requireUser, async (req, res, next) => {
+  try {
+      const tweet = await Tweet.findById(req.params.id);
+      if (!tweet.likes.includes(req.user._id)) {
+          tweet.likes.push(req.user._id);
+          await tweet.save();
+      }
+      return res.json(tweet);
+  } catch(err) {
+      next(err);
+  }
+});
+
+router.put('/unlike/:id', requireUser, async (req, res, next) => {
+  try {
+      const tweet = await Tweet.findById(req.params.id);
+      const index = tweet.likes.indexOf(req.user._id);
+      if (index > -1) {
+          tweet.likes.splice(index, 1);
+          await tweet.save();
+      }
+      return res.json(tweet);
+  } catch(err) {
+      next(err);
+  }
+});
+
+
 // Attach requireUser as a middleware before the route handler to gain access
 // to req.user. (requireUser will return an error response if there is no 
 // current user.) Also attach validateTweetInput as a middleware before the 

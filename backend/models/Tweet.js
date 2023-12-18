@@ -9,6 +9,10 @@ const tweetSchema = new Schema({
   text: {
     type: String,
     required: true
+  },
+  likes: {
+    type: Schema.Types.ObjectId,
+    ref: 'User'
   }
 }, {
   // tells mongoose to add and maintain `createdAt` and `updatedAt` fields with
